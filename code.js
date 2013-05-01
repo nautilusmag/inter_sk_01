@@ -26,7 +26,7 @@ var game = {
 'key_down' : function(e)
 {
 var code = e.keyCode;
-c(code);
+
 //left
 if(code == 37){circ.x_force = -1;}
 //up
@@ -135,7 +135,18 @@ game.screen_height / 2 ,
 game.screen_height/2 -1 , 
 { 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 });
 	
-createPox(world,0,0,30,20);	
+createPox(world,100,100,1,50);	
+
+createShape(world,170,100,[
+0,0,
+5,10,
+20,20,
+30,2,
+
+]);	
+
+	
+
 	
 	//few lightweight boxes
  	var free = {'restitution' : 1.0 , 'linearDamping' : 1.0 , 'angularDamping' : 1.0 , 'density' : 0.2};
@@ -156,7 +167,7 @@ function createPox(world, x, y, width, height, options)
 	options = $.extend(true, {
 		'density' : 1.0 ,
 		'friction' : 0.0 ,
-		'restitution' : 0.2 ,
+		'restitution' : 0.5 ,
 		
 		'linearDamping' : 0.0 ,
 		'angularDamping' : 0.0 ,
@@ -178,8 +189,8 @@ function createPox(world, x, y, width, height, options)
 	nh=height/scale;
 	nx=x/scale;
 	ny=y/scale;
-	nx=nx+(nw/1);
-	ny=ny+(nh/1);
+ 	nx=nx+(nw*1);
+ 	ny=ny+(nh*1);
 	ny = game.screen_height-ny;
 
 	fix_def.shape.SetAsBox( nw , nh );
@@ -197,8 +208,69 @@ function createPox(world, x, y, width, height, options)
 	return b;
 }
 
+function createShape(world, x, y,cords,options) 
+{
+	 //default setting
+	options = $.extend(true, {
+	'density' : 1.0 ,
+		'friction' : 0.0 ,
+		'restitution' : 0.5 ,
+		
+		'linearDamping' : 0.0 ,
+		'angularDamping' : 0.0 ,
+		
+		'gravityScale' : 1.0 ,
+		'type' : b2Body.b2_staticBody
+	}, options);
 
 
+
+	var body_def = new b2BodyDef();
+	var fix_def = new b2FixtureDef;
+	
+	fix_def.density = options.density;
+	fix_def.friction = options.friction;
+	fix_def.restitution = options.restitution;
+	
+	fix_def.shape = new b2PolygonShape();
+
+
+console.log(fix_def);	
+	
+	
+	
+
+	
+
+	nx=x/scale;
+	ny=y/scale;
+
+	ny = game.screen_height-ny;
+
+//	fix_def.shape.SetAsBox( nw , nh );
+	
+	s=4/scale;
+	  	
+tt = new Array;
+for (var i=0; i<cords.length; i=i+2) {
+tt.push(new b2Vec2(s*cords[i], -1*(s*cords[i+1])));
+}
+fix_def.shape.SetAsArray(tt);
+
+
+	
+	body_def.position.Set(nx , ny);
+
+	body_def.linearDamping = options.linearDamping;
+	body_def.angularDamping = options.angularDamping;
+	
+	//body_def.type = options.type;
+	
+	var b = world.CreateBody( body_def );
+	var f = b.CreateFixture(fix_def);
+
+	return b;
+}
 
 
 
@@ -379,3 +451,23 @@ circ.fy = 0;
 
 
 function c(x){console.log(x);}
+
+
+// $('#box').animate({  textIndent: 0 }, {
+//     step: function(now,fx) {
+//       $(this).css('-webkit-transform','rotate('+now+'deg)'); 
+//     },
+//     duration:'slow'
+// },'linear');
+
+
+// $('#foo').animate({  borderSpacing: -90 }, {
+//     step: function(now,fx) {
+//       $(this).css('-webkit-transform','rotate('+now+'deg)');
+//       $(this).css('-moz-transform','rotate('+now+'deg)'); 
+//       $(this).css('-ms-transform','rotate('+now+'deg)');
+//       $(this).css('-o-transform','rotate('+now+'deg)');
+//       $(this).css('transform','rotate('+now+'deg)');  
+//     },
+//     duration:'slow'
+// },'linear');
