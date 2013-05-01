@@ -119,12 +119,27 @@ function createWorld()
 	
 	world.SetDebugDraw(debugDraw);
 	
-	createBox(world , game.screen_width / 2 , 0.5 , game.screen_width/2 - 1 , 0.1 , { 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 });
-	createBox(world , game.screen_width -1  , game.screen_height / 2 , 0.1 , game.screen_height/2 -1 , { 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 });
+createBox(world , 
+game.screen_width / 2 , 
+0.5 , 
+game.screen_width/2 - 1 , 
+0.1 , 
+{ 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 }
+);
+
+
+createBox(world , 
+game.screen_width -1  , 
+game.screen_height / 2 , 
+0.1 , 
+game.screen_height/2 -1 , 
+{ 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 });
+	
+createPox(world,0,0,30,20);	
 	
 	//few lightweight boxes
  	var free = {'restitution' : 1.0 , 'linearDamping' : 1.0 , 'angularDamping' : 1.0 , 'density' : 0.2};
-// 	createBox(world , 2 , 2 , 0.5 , 0.5 , free);
+//	createBox(world , 2 , 2 , 0.5 , 0.5 , free);
 // 	createBox(world , 5 , 2 , 0.5 , 0.5 , free);
 	
 	//createCircle(world, 2, 2,0.2, free);
@@ -132,6 +147,61 @@ function createWorld()
 	
 	return world;
 }		
+
+
+
+function createPox(world, x, y, width, height, options) 
+{
+	 //default setting
+	options = $.extend(true, {
+		'density' : 1.0 ,
+		'friction' : 0.0 ,
+		'restitution' : 0.2 ,
+		
+		'linearDamping' : 0.0 ,
+		'angularDamping' : 0.0 ,
+		
+		'gravityScale' : 1.0 ,
+		'type' : b2Body.b2_staticBody
+	}, options);
+
+	var body_def = new b2BodyDef();
+	var fix_def = new b2FixtureDef;
+	
+	fix_def.density = options.density;
+	fix_def.friction = options.friction;
+	fix_def.restitution = options.restitution;
+	
+	fix_def.shape = new b2PolygonShape();
+	
+	nw=width/scale;
+	nh=height/scale;
+	nx=x/scale;
+	ny=y/scale;
+	nx=nx+(nw/1);
+	ny=ny+(nh/1);
+	ny = game.screen_height-ny;
+
+	fix_def.shape.SetAsBox( nw , nh );
+	
+	body_def.position.Set(nx , ny);
+
+	body_def.linearDamping = options.linearDamping;
+	body_def.angularDamping = options.angularDamping;
+	
+	body_def.type = options.type;
+	
+	var b = world.CreateBody( body_def );
+	var f = b.CreateFixture(fix_def);
+
+	return b;
+}
+
+
+
+
+
+
 
 //Create standard boxes of given height , width at x,y
 function createBox(world, x, y, width, height, options) 
@@ -161,7 +231,7 @@ function createBox(world, x, y, width, height, options)
 	fix_def.shape.SetAsBox( width , height );
 	
 	body_def.position.Set(x , y);
-	
+
 	body_def.linearDamping = options.linearDamping;
 	body_def.angularDamping = options.angularDamping;
 	
@@ -169,7 +239,7 @@ function createBox(world, x, y, width, height, options)
 	
 	var b = world.CreateBody( body_def );
 	var f = b.CreateFixture(fix_def);
-	
+
 	return b;
 }
 
