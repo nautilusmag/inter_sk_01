@@ -23,60 +23,47 @@ var b2Vec2 = Box2D.Common.Math.b2Vec2
          
 var game = {
 	
-	'key_down' : function(e)
-	{
-		var code = e.keyCode;
+'key_down' : function(e)
+{
+var code = e.keyCode;
+c(code);
+//left
+if(code == 37){circ.x_force = -1;}
+//up
+if(code == 38){circ.y_force = 1;}
+//right
+if(code == 39){circ.x_force = 1;}
+//down
+if(code == 40){circ.y_force = -1;}
+//car.start_engine();}
 
-		//left
-		if(code == 37)
-		{
+if(code == 32){
+circ.fx = 1;
+circ.fy = -1;
 
-circ.x_force = -1;
-		}
-		//up
-		if(code == 38)
-		{
-circ.y_force = 1;
-		}
-		
-		//right
-		if(code == 39)
-		{
-circ.x_force = 1;
-		}
-		
-		//down
-		if(code == 40)
-		{
-circ.y_force = -1;
-			//car.start_engine();
-		}
-	} ,
-	
-	'key_up' : function(e)
-	{
-		var code = e.keyCode;
-		
-		//stop forward velocity only when up or down key is released
-		if(code == 38 || code == 40)
-		{
-circ.y_force = 0;
-		}
-		//LEFT OR RIGHT
-		if(code == 37 || code == 39)
-		{
-circ.x_force = 0;
-		}
-	} ,
+}// space fire
+
+
+} ,
+
+'key_up' : function(e)
+{
+var code = e.keyCode;
+
+//stop forward velocity only when up or down key is released
+if(code == 38 || code == 40){circ.y_force = 0;}
+//LEFT OR RIGHT
+if(code == 37 || code == 39){circ.x_force = 0;}
+} ,
 	
 	'screen_width' : 0 ,
 	'screen_height' : 0 ,
 };
 
-var engine_speed = 0;
-var steering_angle = 0;
-var steer_speed = 1.0;
-var max_steer_angle = Math.PI/3;	//60 degrees to be precise
+// var engine_speed = 0;
+// var steering_angle = 0;
+// var steer_speed = 1.0;
+// var max_steer_angle = Math.PI/3;	//60 degrees to be precise
 var world;
 var ctx;
 var canvas_height;
@@ -87,29 +74,18 @@ var scale = 100;
 //The car object
 
 var circ = {
-'restitution' : 1.0 , 'linearDamping' : 1.0 , 'angularDamping' : 1.0 , 'density' : 0.2, 'x_force':0,'y_force':0
+'restitution' : 1.0 , 
+'linearDamping' : 1.0 , 
+'angularDamping' : 1.0 , 
+'density' : 1.2, 
+'x_force':0,
+'y_force':0,
+'fx':0,
+'fy':0,
 };
 
 
-var car = {
-	
-	'top_engine_speed' : 2.5 ,
-	'engine_on' : false ,
-	
-	'start_engine' : function()
-	{
-		car.engine_on = true;
-		car.engine_speed = car.gear * car.top_engine_speed;
-	} ,
-	
-	'stop_engine' : function()
-	{
-		car.engine_on = false;
-		car.engine_speed = 0;
-	} ,
-	
-	'gear' : 1
-};
+
 
 /*
 	Draw a world
@@ -123,13 +99,7 @@ function redraw_world(world, context)
 	ctx.scale(1 , -1);
 	world.DrawDebugData();
 	ctx.restore();
-	
-	ctx.font = 'bold 15px arial';
-	ctx.textAlign = 'center';
-	ctx.fillStyle = '#ffffff';
-	ctx.fillText('Use arrow keys to move the car', canvas_width/2, 20);
-	ctx.fillText('Car Gear : ' + car.gear + ' Car Engine Speed : ' + car.engine_speed + ' mps ', canvas_width/2, 40);
-}
+	}
 
 //Create box2d world object
 function createWorld() 
@@ -208,7 +178,7 @@ function createCircle(world, x, y, radius, options)
 {
 	 //default setting
 	options = $.extend(true, {
-		'density' : 1.0 ,
+		'density' : 5.0 ,
 		'friction' : 0.0 ,
 		'restitution' : 0.2 ,
 		
@@ -267,7 +237,7 @@ function game_loop()
 	var fps = 60;
 	var time_step = 1.0/fps;
 	
-	//update_car();
+
 	update_circ();
 	//move the world ahead , step ahead man!!
 	world.Step(time_step , 8 , 3);
@@ -297,7 +267,7 @@ $(function()
 	//first create the world
 	world = createWorld();
 	
-	//create_car();
+
 	create_circ();
 	$(document).keydown(function(e)
 	{
@@ -315,70 +285,10 @@ $(function()
 	game_loop();
 });
 
-function create_car()
-{
-	car_pos = new b2Vec2(3 , 3);
-	car_dim = new b2Vec2(0.2 , 0.35);
-	car.body = createBox(world , car_pos.x , car_pos.y , car_dim.x , car_dim.y , {'linearDamping' : 10.0 , 'angularDamping' : 10.0});
-	
-	var wheel_dim = car_dim.Copy();
-	wheel_dim.Multiply(0.2);
-	
-	//front wheels
-	left_wheel = createBox(world , car_pos.x - car_dim.x , car_pos.y + car_dim.y / 2 , wheel_dim.x , wheel_dim.y , {});
-	right_wheel = createBox(world , car_pos.x + car_dim.x, car_pos.y + car_dim.y / 2 , wheel_dim.x , wheel_dim.y , {});
-	
-	//rear wheels
-	left_rear_wheel = createBox(world , car_pos.x - car_dim.x , car_pos.y - car_dim.y / 2 , wheel_dim.x , wheel_dim.y , {});
-	right_rear_wheel = createBox(world , car_pos.x + car_dim.x, car_pos.y - car_dim.y / 2 , wheel_dim.x , wheel_dim.y , {});
-	
-	var front_wheels = {'left_wheel' : left_wheel , 'right_wheel' : right_wheel};
-	
-	for (var i in front_wheels)
-	{
-		var wheel = front_wheels[i];
-		
-		var joint_def = new b2RevoluteJointDef();
-		joint_def.Initialize(car.body , wheel, wheel.GetWorldCenter());
-		
-		//after enablemotor , setmotorspeed is used to make the joins rotate , remember!
-		joint_def.enableMotor = true;
-		joint_def.maxMotorTorque = 100000;
-		
-		//this will prevent spinning of wheels when hit by something strong
-		joint_def.enableLimit = true;
-  		joint_def.lowerAngle =  -1 * max_steer_angle;
-		joint_def.upperAngle =  max_steer_angle;
-		
-		//create and save the joint
-		car[i + '_joint'] = world.CreateJoint(joint_def);
-	}
-	
-	var rear_wheels = {'left_rear_wheel' : left_rear_wheel , 'right_rear_wheel' : right_rear_wheel};
-	
-	for (var i in rear_wheels)
-	{
-		var wheel = rear_wheels[i];
-		
-		var joint_def = new b2PrismaticJointDef();
-		joint_def.Initialize( car.body , wheel, wheel.GetWorldCenter(), new b2Vec2(1,0) );
-	
-		joint_def.enableLimit = true;
-		joint_def.lowerTranslation = joint_def.upperTranslation = 0.0;
-		
-		car[i + '_joint'] = world.CreateJoint(joint_def);
-	}
-	
-	car.left_wheel = left_wheel;
-	car.right_wheel = right_wheel;
-	car.left_rear_wheel = left_rear_wheel;
-	car.right_rear_wheel = right_rear_wheel;
-	
-	return car;
-}
+
 
 function create_circ(){
-circ.body = createCircle(world, 2, 2,0.2);
+circ.body = createCircle(world, 2, 2,0.1);
 
 // circ.body.ApplyForce({ x: 1.234, y: -1.234 }, circ.body.GetWorldCenter());
 // console.log(circ.body);
@@ -390,36 +300,12 @@ function update_circ()
 
 circ.body.ApplyForce({ x: circ.x_force, y: circ.y_force }, circ.body.GetWorldCenter());
 
+circ.body.ApplyImpulse({ x: circ.fx, y: circ.fy }, circ.body.GetWorldCenter());
+circ.fx = 0;
+circ.fy = 0;
+
 
 }
-//Method to update the car
-function update_car()
-{
-	var wheels = ['left' , 'right'];
-	
-	//Driving
-	for(var i in wheels)
-	{
-		var d = wheels[i] + '_wheel';
-		var wheel = car[d];
-		
-		//get the direction in which the wheel is pointing
-		var direction = wheel.GetTransform().R.col2.Copy();
-		//console.log(direction.y);
-		direction.Multiply( car.engine_speed );
-		
-		//apply force in that direction
-		wheel.ApplyForce( direction , wheel.GetPosition() );
-	}	
-	
-	//Steering
-	for(var i in wheels)
-	{
-		var d = wheels[i] + '_wheel_joint';
-		var wheel_joint = car[d];
-		
-		//max speed - current speed , should be the motor speed , so when max speed reached , speed = 0;
-		var angle_diff = steering_angle - wheel_joint.GetJointAngle();
-		wheel_joint.SetMotorSpeed(angle_diff * steer_speed);
-	}
-}
+
+
+function c(x){console.log(x);}
