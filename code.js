@@ -28,19 +28,44 @@ var game = {
 var code = e.keyCode;
 
 //left
-if(code == 37){circ.x_force = -1;}
-//up
-if(code == 38){circ.y_force = 1;}
+if(code == 37){
+//circ.x_force = -1;
+chng = -1;
+}
+
 //right
-if(code == 39){circ.x_force = 1;}
-//down
-if(code == 40){circ.y_force = -1;}
-//car.start_engine();}
+if(code == 39){
+//circ.x_force = 1;
+chng = 1;}
 
-if(code == 32){
-circ.fx = 1;
-circ.fy = -1;
 
+//up
+// if(code == 38){circ.y_force = 1;}
+// //down
+// if(code == 40){circ.y_force = -1;}
+// //car.start_engine();}
+
+if(code == 38){
+// circ.fx = 1;
+// circ.fy = -1;
+
+
+//cur = nw*Math.PI /180;
+//cur = nw;
+//console.log(cur);
+
+
+//clx = 250*Math.cos(cur)+250;
+//cly = 250*Math.sin(cur)+250;
+	//create_circ(30,30);
+
+lcr = $('#blk').offset();
+
+nx=(lcr.top)/1;
+ny=(lcr.left)/1;
+create_circ(nx,500-ny);
+
+console.log(lcr);
 }// space fire
 
 
@@ -49,11 +74,11 @@ circ.fy = -1;
 'key_up' : function(e)
 {
 var code = e.keyCode;
-
+chng = 0;
 //stop forward velocity only when up or down key is released
-if(code == 38 || code == 40){circ.y_force = 0;}
-//LEFT OR RIGHT
-if(code == 37 || code == 39){circ.x_force = 0;}
+// if(code == 38 || code == 40){circ.y_force = 0;}
+// //LEFT OR RIGHT
+// if(code == 37 || code == 39){circ.x_force = 0;}
 } ,
 	
 	'screen_width' : 0 ,
@@ -119,21 +144,20 @@ function createWorld()
 	
 	world.SetDebugDraw(debugDraw);
 	
-createBox(world , 
-game.screen_width / 2 , 
-0.5 , 
-game.screen_width/2 - 1 , 
-0.1 , 
-{ 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 }
-);
-
-
-createBox(world , 
-game.screen_width -1  , 
-game.screen_height / 2 , 
-0.1 , 
-game.screen_height/2 -1 , 
-{ 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 });
+// createBox(world , 
+// game.screen_width / 2 , 0.5 , 
+// game.screen_width/2 - 1 , 
+// 0.1 , 
+// { 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 }
+// );
+// 
+// 
+// createBox(world , 
+// game.screen_width -1  , 
+// game.screen_height / 2 , 
+// 0.1 , 
+// game.screen_height/2 -1 , 
+// { 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 });
 	
 createPox(world,100,100,1,50);	
 
@@ -234,11 +258,6 @@ function createShape(world, x, y,cords,options)
 	
 	fix_def.shape = new b2PolygonShape();
 
-
-console.log(fix_def);	
-	
-	
-	
 
 	
 
@@ -379,7 +398,7 @@ function game_loop()
 	var fps = 60;
 	var time_step = 1.0/fps;
 	
-
+	rotcn();
 	update_circ();
 	//move the world ahead , step ahead man!!
 	world.Step(time_step , 8 , 3);
@@ -410,7 +429,7 @@ $(function()
 	world = createWorld();
 	
 
-	create_circ();
+//	create_circ();
 	$(document).keydown(function(e)
 	{
 		game.key_down(e);
@@ -429,8 +448,8 @@ $(function()
 
 
 
-function create_circ(){
-circ.body = createCircle(world, 2, 2,0.1);
+function create_circ(x,y){
+circ.body = createCircle(world, x/scale, game.screen_height-(y/scale),0.1);
 
 // circ.body.ApplyForce({ x: 1.234, y: -1.234 }, circ.body.GetWorldCenter());
 // console.log(circ.body);
@@ -440,17 +459,41 @@ function update_circ()
 {
 	//circ.body = createCircle(world, 2, 2,0.2);
 
-circ.body.ApplyForce({ x: circ.x_force, y: circ.y_force }, circ.body.GetWorldCenter());
+//circ.body.ApplyForce({ x: circ.x_force, y: circ.y_force }, circ.body.GetWorldCenter());
 
+
+if(circ.body != undefined){
 circ.body.ApplyImpulse({ x: circ.fx, y: circ.fy }, circ.body.GetWorldCenter());
 circ.fx = 0;
 circ.fy = 0;
-
+}
 
 }
 
 
 function c(x){console.log(x);}
+var nw = 0;
+var chng = 0;
+function rotcn(){
+nw=nw+chng;
+
+nw = (nw<0)? nw=360+nw:nw;
+nw = (nw>360)? nw=nw-360:nw;
+
+
+// $('#cnnon').animate({  borderSpacing: cngl }, {
+//     step: function(nw,fx) {
+     $('#cnnon').css('-webkit-transform','rotate('+nw+'deg)');
+     $('#cnnon').css('-moz-transform','rotate('+nw+'deg)'); 
+      $('#cnnon').css('-ms-transform','rotate('+nw+'deg)');
+     $('#cnnon').css('-o-transform','rotate('+nw+'deg)');
+     $('#cnnon').css('transform','rotate('+nw+'deg)');  
+ //    },
+//     duration:100
+// },'linear');
+
+
+}
 
 
 // $('#box').animate({  textIndent: 0 }, {
