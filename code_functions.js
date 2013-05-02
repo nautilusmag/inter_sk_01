@@ -28,14 +28,26 @@ function createWorld()
 //createPox(world,100,100,1,50);	
 
 createShape(world,365,365,[
--5,-5,
-5,10,
-14,18,
-21,4,
+// -5,-5,
+// 5,-5,
+// 14,18,
+// 21,4,
+
+//-15,-15,-15,15,15,15,15,-15,//square
+//0,0,-15,15,15,15,//tri
+3,3,15,-15,-15,-15,//utri
+
+
 
 ]);	
 	return world;
 }		
+
+function insert_x(x,y){
+$("#ring").append('<div style="left:'+x+'px;top:'+y+'px;" class="trail">.</div>');
+
+
+}
 
 function createPox(world, x, y, width, height, options) 
 {
@@ -150,6 +162,7 @@ function createCircle(world, x, y, radius, options)
 		'linearDamping' : 0.0 ,
 		'angularDamping' : 0.0 ,
 		'gravityScale' : 1.0 ,
+
 		'type' : b2Body.b2_dynamicBody
 	}, options);
 	
@@ -162,6 +175,7 @@ function createCircle(world, x, y, radius, options)
 	body_def.position.Set(x , y);
 	body_def.linearDamping = options.linearDamping;
 	body_def.angularDamping = options.angularDamping;
+	body_def.userData = 'abc';
 	body_def.type = options.type;
 	var b = world.CreateBody( body_def );
 	var f = b.CreateFixture(fix_def);
@@ -176,11 +190,30 @@ function game_loop()
 	world.Step(time_step , 8 , 3);
 	world.ClearForces();
 	redraw_world(world , ctx);
+	
+	
+	for (b = world.GetBodyList() ; b; b = b.GetNext()) {
+            if (b.GetUserData() == 'abc') {
+
+                var pos = b.GetPosition();
+//console.log(pos);
+xx=100*(pos.x);
+yy=730-(100*(pos.y));
+if(xx>0 && yy>0 && xx<745 && yy<745){
+insert_x(xx,yy);
+}
+                // context.save();
+           }
+        }
+	
+	
+	
 	setTimeout('game_loop()', 1000/60);
 }
 
 function create_circ(x,y,dd){
-console.log(dd);
+
+$('.trail').fadeOut(1000, function(){ $(this).remove();});
 circ.body = createCircle(world, x/scale, game.screen_height-(y/scale),rd ,{ 'density' : 5.0 });
 
 impulse = new b2Vec2(pwr*Math.cos(dd*Math.PI/180),pwr*Math.sin(dd*Math.PI/180));

@@ -72,6 +72,8 @@ var circ = {
 };
 
 
+
+
 $(function() 
 {
 	game.ctx = ctx = $('#canvas').get(0).getContext('2d');
@@ -81,6 +83,12 @@ $(function()
 	game.screen_width = game.canvas_width / scale;
 	game.screen_height = game.canvas_height / scale;
 	world = createWorld();
+
+
+
+
+
+
 
 	$(document).keydown(function(e)
 	{
