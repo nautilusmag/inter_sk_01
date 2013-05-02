@@ -84,10 +84,15 @@ tw=nw+45;//112.5
 //tw=nw*nw;
 // tw = (tw<0)? tw=360+tw:tw;
 // tw = (tw>360)? tw=tw-360:tw;
+//angleInDegrees = atan2(deltaY, deltaX) * 180 / PI
 
+// ddy = 250 - y;
+// ddx = 250 - x;
+ddy = y - 250;
+ddx = (500-x) - 250;
+ang = (Math.atan2(ddy,ddx) * 180 / Math.PI);
 
-console.log(nw);
-create_circ(x,y,tw);
+create_circ(x,y,ang);
 
 // circ.fx = 10;
 // circ.fy = 10;
@@ -475,7 +480,7 @@ $(function()
 
 
 function create_circ(x,y,dd){
-
+console.log(dd);
 circ.body = createCircle(world, x/scale, game.screen_height-(y/scale),0.1 ,{ 'density' : 5.0 });
 pwr=1;
 impulse = new b2Vec2(pwr*Math.cos(dd*Math.PI/180),pwr*Math.sin(dd*Math.PI/180));
