@@ -53,18 +53,41 @@ var theta = (nw-90)*Math.PI/180;
 var x = (Math.cos(theta) * 240)+250;
 var y = (Math.sin(theta) * 240)+250;
 
-fx=250-x;
-fy=y-250;
-
-dx=Math.round(fx)/Math.round(fy);
-dy=1;
-if(y<250){
-dy=dy*-1;
-dx=dx*-1;
-}
+// fx=Math.abs(250-x);
+// fy=Math.abs(250-y);
+// leg =(fx*fx)+(fy*fy);
+// 
+// 
+// 
+// dx=Math.round(fx)/Math.round(fy);
+// dy=1;
+// if(y<250){
+// dy=dy*-1;
+// dx=dx*-1;
+// }
 //adj =5;
-adj = Math.abs(250-(Math.abs(y-250)));
-create_circ(x,y,dx,dy,nw);
+//adj = Math.abs(250-(Math.abs(y-250)));
+//create_circ(x,y,dx,dy,nw);
+
+tw=nw+270;//0
+tw=nw+180;//45
+tw=nw+90;//90 
+tw=nw+45;//112.5 
+//tw=nw+0;//315,135
+
+
+//compute angle betwen center x,y
+
+
+
+//tw=180*(nw*Math.PI/360);
+//tw=nw*nw;
+// tw = (tw<0)? tw=360+tw:tw;
+// tw = (tw>360)? tw=tw-360:tw;
+
+
+console.log(nw);
+create_circ(x,y,tw);
 
 // circ.fx = 10;
 // circ.fy = 10;
@@ -451,16 +474,15 @@ $(function()
 
 
 
-function create_circ(x,y,dx,dy,dd){
-console.log(dd);
-circ.body = createCircle(world, x/scale, game.screen_height-(y/scale),0.1 ,{ 'density' : dd });
+function create_circ(x,y,dd){
 
-//hj = new b2Vec2(1*Math.cos(nw*Math.PI/180),1*Math.sin(nw*Math.PI/180));
+circ.body = createCircle(world, x/scale, game.screen_height-(y/scale),0.1 ,{ 'density' : 5.0 });
+pwr=1;
+impulse = new b2Vec2(pwr*Math.cos(dd*Math.PI/180),pwr*Math.sin(dd*Math.PI/180));
 
 
-//circ.body.ApplyImpulse(hj, circ.body.GetWorldCenter());
-circ.body.ApplyImpulse({ x: dx, y: dy }, circ.body.GetWorldCenter());
-
+circ.body.ApplyImpulse(impulse, circ.body.GetWorldCenter());
+//console.log(impulse);
 // circ.body.ApplyForce({ x: 1.234, y: -1.234 }, circ.body.GetWorldCenter());
 // console.log(circ.body);
 }
