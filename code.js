@@ -46,26 +46,29 @@ chng = 1;}
 // //car.start_engine();}
 
 if(code == 38){
-// circ.fx = 1;
-// circ.fy = -1;
 
+nw = (nw == 90)? 91:nw;
+nw = (nw == 270)? 271:nw;
+var theta = (nw-90)*Math.PI/180;
+var x = (Math.cos(theta) * 240)+250;
+var y = (Math.sin(theta) * 240)+250;
 
-//cur = nw*Math.PI /180;
-//cur = nw;
-//console.log(cur);
+fx=250-x;
+fy=y-250;
 
+dx=Math.round(fx)/Math.round(fy);
+dy=1;
+if(y<250){
+dy=dy*-1;
+dx=dx*-1;
+}
+//adj =5;
+adj = Math.abs(250-(Math.abs(y-250)));
+create_circ(x,y,dx,dy,nw);
 
-//clx = 250*Math.cos(cur)+250;
-//cly = 250*Math.sin(cur)+250;
-	//create_circ(30,30);
+// circ.fx = 10;
+// circ.fy = 10;
 
-lcr = $('#blk').offset();
-
-nx=(lcr.top)/1;
-ny=(lcr.left)/1;
-create_circ(nx,500-ny);
-
-console.log(lcr);
 }// space fire
 
 
@@ -159,10 +162,10 @@ function createWorld()
 // game.screen_height/2 -1 , 
 // { 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 });
 	
-createPox(world,100,100,1,50);	
+//createPox(world,100,100,1,50);	
 
-createShape(world,170,100,[
-0,0,
+createShape(world,250,250,[
+-3,-3,
 5,10,
 20,20,
 30,2,
@@ -448,8 +451,15 @@ $(function()
 
 
 
-function create_circ(x,y){
-circ.body = createCircle(world, x/scale, game.screen_height-(y/scale),0.1);
+function create_circ(x,y,dx,dy,dd){
+console.log(dd);
+circ.body = createCircle(world, x/scale, game.screen_height-(y/scale),0.1 ,{ 'density' : dd });
+
+//hj = new b2Vec2(1*Math.cos(nw*Math.PI/180),1*Math.sin(nw*Math.PI/180));
+
+
+//circ.body.ApplyImpulse(hj, circ.body.GetWorldCenter());
+circ.body.ApplyImpulse({ x: dx, y: dy }, circ.body.GetWorldCenter());
 
 // circ.body.ApplyForce({ x: 1.234, y: -1.234 }, circ.body.GetWorldCenter());
 // console.log(circ.body);
@@ -462,11 +472,11 @@ function update_circ()
 //circ.body.ApplyForce({ x: circ.x_force, y: circ.y_force }, circ.body.GetWorldCenter());
 
 
-if(circ.body != undefined){
-circ.body.ApplyImpulse({ x: circ.fx, y: circ.fy }, circ.body.GetWorldCenter());
-circ.fx = 0;
-circ.fy = 0;
-}
+// if(circ.body != undefined){
+// circ.body.ApplyImpulse({ x: circ.fx, y: circ.fy }, circ.body.GetWorldCenter());
+// circ.fx = 0;
+// circ.fy = 0;
+// }
 
 }
 
