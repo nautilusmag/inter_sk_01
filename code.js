@@ -1,7 +1,3 @@
-/*
-	Racing car example
-	Silver Moon (m00n.silv3r@gmail.com)
-*/
 
 //Get the objects of Box2d Library
 var b2Vec2 = Box2D.Common.Math.b2Vec2
@@ -28,106 +24,38 @@ var game = {
 var code = e.keyCode;
 
 //left
-if(code == 37){
-//circ.x_force = -1;
-chng = -1;
-}
-
+if(code == 37){chng = -1;}
 //right
-if(code == 39){
-//circ.x_force = 1;
-chng = 1;}
-
-
-//up
-// if(code == 38){circ.y_force = 1;}
-// //down
-// if(code == 40){circ.y_force = -1;}
-// //car.start_engine();}
-
+if(code == 39){chng = 1;}
+//fire
 if(code == 38){
 
-nw = (nw == 90)? 91:nw;
-nw = (nw == 270)? 271:nw;
+// nw = (nw == 90)? 91:nw;
+// nw = (nw == 270)? 271:nw;
 var theta = (nw-90)*Math.PI/180;
 var x = (Math.cos(theta) * 240)+250;
 var y = (Math.sin(theta) * 240)+250;
 
-// fx=Math.abs(250-x);
-// fy=Math.abs(250-y);
-// leg =(fx*fx)+(fy*fy);
-// 
-// 
-// 
-// dx=Math.round(fx)/Math.round(fy);
-// dy=1;
-// if(y<250){
-// dy=dy*-1;
-// dx=dx*-1;
-// }
-//adj =5;
-//adj = Math.abs(250-(Math.abs(y-250)));
-//create_circ(x,y,dx,dy,nw);
-
-tw=nw+270;//0
-tw=nw+180;//45
-tw=nw+90;//90 
-tw=nw+45;//112.5 
-//tw=nw+0;//315,135
-
-
-//compute angle betwen center x,y
-
-
-
-//tw=180*(nw*Math.PI/360);
-//tw=nw*nw;
-// tw = (tw<0)? tw=360+tw:tw;
-// tw = (tw>360)? tw=tw-360:tw;
-//angleInDegrees = atan2(deltaY, deltaX) * 180 / PI
-
-// ddy = 250 - y;
-// ddx = 250 - x;
 ddy = y - 250;
 ddx = (500-x) - 250;
 ang = (Math.atan2(ddy,ddx) * 180 / Math.PI);
-
 create_circ(x,y,ang);
-
-// circ.fx = 10;
-// circ.fy = 10;
-
-}// space fire
-
-
-} ,
+}} ,
 
 'key_up' : function(e)
 {
 var code = e.keyCode;
-chng = 0;
-//stop forward velocity only when up or down key is released
-// if(code == 38 || code == 40){circ.y_force = 0;}
-// //LEFT OR RIGHT
-// if(code == 37 || code == 39){circ.x_force = 0;}
-} ,
-	
+chng = 0;} ,
 	'screen_width' : 0 ,
 	'screen_height' : 0 ,
 };
 
-// var engine_speed = 0;
-// var steering_angle = 0;
-// var steer_speed = 1.0;
-// var max_steer_angle = Math.PI/3;	//60 degrees to be precise
 var world;
 var ctx;
 var canvas_height;
 
 //1 metre of box2d length becomes 100 pixels on canvas
 var scale = 100;
-
-//The car object
 
 var circ = {
 'restitution' : 1.0 , 
@@ -175,21 +103,6 @@ function createWorld()
 	
 	world.SetDebugDraw(debugDraw);
 	
-// createBox(world , 
-// game.screen_width / 2 , 0.5 , 
-// game.screen_width/2 - 1 , 
-// 0.1 , 
-// { 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 }
-// );
-// 
-// 
-// createBox(world , 
-// game.screen_width -1  , 
-// game.screen_height / 2 , 
-// 0.1 , 
-// game.screen_height/2 -1 , 
-// { 'type' : b2Body.b2_staticBody , 'restitution' : 0.5 });
-	
 //createPox(world,100,100,1,50);	
 
 createShape(world,250,250,[
@@ -199,18 +112,6 @@ createShape(world,250,250,[
 30,2,
 
 ]);	
-
-	
-
-	
-	//few lightweight boxes
- 	var free = {'restitution' : 1.0 , 'linearDamping' : 1.0 , 'angularDamping' : 1.0 , 'density' : 0.2};
-//	createBox(world , 2 , 2 , 0.5 , 0.5 , free);
-// 	createBox(world , 5 , 2 , 0.5 , 0.5 , free);
-	
-	//createCircle(world, 2, 2,0.2, free);
-	
-	
 	return world;
 }		
 
@@ -222,11 +123,9 @@ function createPox(world, x, y, width, height, options)
 	options = $.extend(true, {
 		'density' : 1.0 ,
 		'friction' : 0.0 ,
-		'restitution' : 0.5 ,
-		
+		'restitution' : 0.5 ,		
 		'linearDamping' : 0.0 ,
-		'angularDamping' : 0.0 ,
-		
+		'angularDamping' : 0.0 ,		
 		'gravityScale' : 1.0 ,
 		'type' : b2Body.b2_staticBody
 	}, options);
@@ -237,9 +136,7 @@ function createPox(world, x, y, width, height, options)
 	fix_def.density = options.density;
 	fix_def.friction = options.friction;
 	fix_def.restitution = options.restitution;
-	
 	fix_def.shape = new b2PolygonShape();
-	
 	nw=width/scale;
 	nh=height/scale;
 	nx=x/scale;
@@ -247,14 +144,10 @@ function createPox(world, x, y, width, height, options)
  	nx=nx+(nw*1);
  	ny=ny+(nh*1);
 	ny = game.screen_height-ny;
-
 	fix_def.shape.SetAsBox( nw , nh );
-	
 	body_def.position.Set(nx , ny);
-
 	body_def.linearDamping = options.linearDamping;
 	body_def.angularDamping = options.angularDamping;
-	
 	body_def.type = options.type;
 	
 	var b = world.CreateBody( body_def );
@@ -270,55 +163,32 @@ function createShape(world, x, y,cords,options)
 	'density' : 1.0 ,
 		'friction' : 0.0 ,
 		'restitution' : 0.5 ,
-		
 		'linearDamping' : 0.0 ,
 		'angularDamping' : 0.0 ,
-		
 		'gravityScale' : 1.0 ,
 		'type' : b2Body.b2_staticBody
 	}, options);
-
-
-
 	var body_def = new b2BodyDef();
 	var fix_def = new b2FixtureDef;
-	
 	fix_def.density = options.density;
 	fix_def.friction = options.friction;
 	fix_def.restitution = options.restitution;
-	
 	fix_def.shape = new b2PolygonShape();
-
-
-	
-
 	nx=x/scale;
 	ny=y/scale;
-
 	ny = game.screen_height-ny;
-
-//	fix_def.shape.SetAsBox( nw , nh );
-	
 	s=4/scale;
 	  	
 tt = new Array;
-for (var i=0; i<cords.length; i=i+2) {
-tt.push(new b2Vec2(s*cords[i], -1*(s*cords[i+1])));
-}
+	for (var i=0; i<cords.length; i=i+2) {
+		tt.push(new b2Vec2(s*cords[i], -1*(s*cords[i+1])));
+	}
 fix_def.shape.SetAsArray(tt);
-
-
-	
 	body_def.position.Set(nx , ny);
-
 	body_def.linearDamping = options.linearDamping;
 	body_def.angularDamping = options.angularDamping;
-	
-	//body_def.type = options.type;
-	
 	var b = world.CreateBody( body_def );
 	var f = b.CreateFixture(fix_def);
-
 	return b;
 }
 
@@ -333,61 +203,46 @@ function createBox(world, x, y, width, height, options)
 		'density' : 1.0 ,
 		'friction' : 0.0 ,
 		'restitution' : 0.2 ,
-		
 		'linearDamping' : 0.0 ,
 		'angularDamping' : 0.0 ,
-		
 		'gravityScale' : 1.0 ,
 		'type' : b2Body.b2_dynamicBody
 	}, options);
 	
 	var body_def = new b2BodyDef();
 	var fix_def = new b2FixtureDef;
-	
 	fix_def.density = options.density;
 	fix_def.friction = options.friction;
 	fix_def.restitution = options.restitution;
-	
 	fix_def.shape = new b2PolygonShape();
-	
 	fix_def.shape.SetAsBox( width , height );
-	
 	body_def.position.Set(x , y);
-
 	body_def.linearDamping = options.linearDamping;
 	body_def.angularDamping = options.angularDamping;
-	
 	body_def.type = options.type;
-	
 	var b = world.CreateBody( body_def );
 	var f = b.CreateFixture(fix_def);
-
 	return b;
 }
 
 //Create standard circle of given radius at x,y
 function createCircle(world, x, y, radius, options) 
 {
-	 //default setting
 	options = $.extend(true, {
 		'density' : 5.0 ,
 		'friction' : 0.0 ,
 		'restitution' : 0.2 ,
-		
 		'linearDamping' : 0.0 ,
 		'angularDamping' : 0.0 ,
-		
 		'gravityScale' : 1.0 ,
 		'type' : b2Body.b2_dynamicBody
 	}, options);
 	
 	var body_def = new b2BodyDef();
 	var fix_def = new b2FixtureDef;
-	
 	fix_def.density = options.density;
 	fix_def.friction = options.friction;
 	fix_def.restitution = options.restitution;
-	
 	fix_def.shape = new b2CircleShape(radius);
 	body_def.position.Set(x , y);
 	body_def.linearDamping = options.linearDamping;
@@ -395,51 +250,19 @@ function createCircle(world, x, y, radius, options)
 	body_def.type = options.type;
 	var b = world.CreateBody( body_def );
 	var f = b.CreateFixture(fix_def);
-	
 	return b;
 }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-	This method will draw the world again and again
-	called by settimeout , self looped ,
-	game_loop
-*/
 function game_loop() 
 {
 	var fps = 60;
 	var time_step = 1.0/fps;
-	
 	rotcn();
-	update_circ();
-	//move the world ahead , step ahead man!!
 	world.Step(time_step , 8 , 3);
-	//Clear the forces , Box2d 2.1a	
 	world.ClearForces();
-	
-	//redraw the world
 	redraw_world(world , ctx);
-	
-	//call this function again after 10 seconds
 	setTimeout('game_loop()', 1000/60);
 }
 
@@ -449,18 +272,12 @@ $(function()
 {
 	game.ctx = ctx = $('#canvas').get(0).getContext('2d');
 	var canvas = $('#canvas');
-	
 	game.canvas_width = canvas_width = parseInt(canvas.width());
 	game.canvas_height = canvas_height = parseInt(canvas.height());
-	
 	game.screen_width = game.canvas_width / scale;
 	game.screen_height = game.canvas_height / scale;
-	
-	//first create the world
 	world = createWorld();
-	
 
-//	create_circ();
 	$(document).keydown(function(e)
 	{
 		game.key_down(e);
@@ -482,30 +299,12 @@ $(function()
 function create_circ(x,y,dd){
 console.log(dd);
 circ.body = createCircle(world, x/scale, game.screen_height-(y/scale),0.1 ,{ 'density' : 5.0 });
-pwr=1;
+pwr=2;
 impulse = new b2Vec2(pwr*Math.cos(dd*Math.PI/180),pwr*Math.sin(dd*Math.PI/180));
 
-
 circ.body.ApplyImpulse(impulse, circ.body.GetWorldCenter());
-//console.log(impulse);
-// circ.body.ApplyForce({ x: 1.234, y: -1.234 }, circ.body.GetWorldCenter());
-// console.log(circ.body);
 }
-//Method to update the car
-function update_circ()
-{
-	//circ.body = createCircle(world, 2, 2,0.2);
 
-//circ.body.ApplyForce({ x: circ.x_force, y: circ.y_force }, circ.body.GetWorldCenter());
-
-
-// if(circ.body != undefined){
-// circ.body.ApplyImpulse({ x: circ.fx, y: circ.fy }, circ.body.GetWorldCenter());
-// circ.fx = 0;
-// circ.fy = 0;
-// }
-
-}
 
 
 function c(x){console.log(x);}
@@ -513,41 +312,13 @@ var nw = 0;
 var chng = 0;
 function rotcn(){
 nw=nw+chng;
-
 nw = (nw<0)? nw=360+nw:nw;
 nw = (nw>360)? nw=nw-360:nw;
-
-
-// $('#cnnon').animate({  borderSpacing: cngl }, {
-//     step: function(nw,fx) {
-     $('#cnnon').css('-webkit-transform','rotate('+nw+'deg)');
-     $('#cnnon').css('-moz-transform','rotate('+nw+'deg)'); 
-      $('#cnnon').css('-ms-transform','rotate('+nw+'deg)');
-     $('#cnnon').css('-o-transform','rotate('+nw+'deg)');
-     $('#cnnon').css('transform','rotate('+nw+'deg)');  
- //    },
-//     duration:100
-// },'linear');
-
-
+		$('#cnnon').css('-webkit-transform','rotate('+nw+'deg)');
+		$('#cnnon').css('-moz-transform','rotate('+nw+'deg)'); 
+		$('#cnnon').css('-ms-transform','rotate('+nw+'deg)');
+		$('#cnnon').css('-o-transform','rotate('+nw+'deg)');
+		$('#cnnon').css('transform','rotate('+nw+'deg)');  
 }
 
 
-// $('#box').animate({  textIndent: 0 }, {
-//     step: function(now,fx) {
-//       $(this).css('-webkit-transform','rotate('+now+'deg)'); 
-//     },
-//     duration:'slow'
-// },'linear');
-
-
-// $('#foo').animate({  borderSpacing: -90 }, {
-//     step: function(now,fx) {
-//       $(this).css('-webkit-transform','rotate('+now+'deg)');
-//       $(this).css('-moz-transform','rotate('+now+'deg)'); 
-//       $(this).css('-ms-transform','rotate('+now+'deg)');
-//       $(this).css('-o-transform','rotate('+now+'deg)');
-//       $(this).css('transform','rotate('+now+'deg)');  
-//     },
-//     duration:'slow'
-// },'linear');
